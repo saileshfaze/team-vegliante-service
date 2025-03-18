@@ -56,7 +56,12 @@
 
   <br>
   <img id="top-banner" style="width: 100%; max-width: 1350px;" />
-  <div id="output" style="white-space: pre-wrap; font-family: monospace;"></div>
+  
+  <div id="output-container">
+    <textarea id="output" style="width: 100%; height: 300px; font-family: monospace; white-space: pre-wrap;" readonly></textarea><br>
+    <button id="copyButton" onclick="copyToClipboard()">Copy to Clipboard</button>
+  </div>
+  
   <img id="bottom-banner" style="width: 100%; max-width: 1350px;" />
 
   <script>
@@ -160,8 +165,17 @@
         html += `&lt;img src="https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" /&gt;\n`;
       });
 
-      // Display the raw HTML text in the output div
-      document.getElementById('output').innerText = html;
+      // Display the raw HTML text in the output container
+      document.getElementById('output').value = html;
+    }
+
+    // Function to copy the raw HTML code to the clipboard
+    function copyToClipboard() {
+      const outputText = document.getElementById('output');
+      outputText.select();
+      outputText.setSelectionRange(0, 99999); // For mobile devices
+      document.execCommand('copy');
+      alert('HTML code copied to clipboard!');
     }
   </script>
 </body>
