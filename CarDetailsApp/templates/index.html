@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Details</title>
+    <link rel="stylesheet" href="{{ url_for('serve_css', filename='style.css') }}">
+    <script>
+        // Update models when a brand is selected
+        function updateModels() {
+            const selectedBrands = [];
+            document.querySelectorAll('input[name="brand"]:checked').forEach(checkbox => {
+                selectedBrands.push(checkbox.value);
+            });
+
+            fetch('/get_models', {
+                method: 'POST',
+                body: new URLSearchParams({'brand': selectedBrands[0]}),  // Only send the first selected brand for simplicity
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
+            .then(response => response.json())
+            .then(data => {
+                const modelSelect = document.getElementById('model');
+                modelSelect.innerHTML = '<option value="">Select Model</option>';
+                data.models.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    modelSelect.appendChild(option);
+                });
+            });
+        }
+
+        // Update production years when a model is selected
+        function updateYears() {
+            const selectedBrand = document.querySelector('input[name="brand"]:checked').value;
+            const selectedModel = document.getElementById('model').value;
+
+            fetch('/get_years', {
+                method: 'POST',
+                body: new URLSearchParams({'brand': selectedBrand, 'model': selectedModel}),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
+            .then(response => response.json())
+            .then(data => {
+                const yearSelect = document.getElementById('production_year');
+                yearSelect.innerHTML = '<option value="">Select Year</option>';
+                data.years.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearSelect.appendChild(option);
+                });
+            });
+        }
+
+        // Update the banner images based on user selection
+        function updateUserImage() {
+            const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
+            const topBannerImage = document.getElementById('top-banner');
+            const bottomBannerImage = document.getElementById('bottom-banner');
+
+            if (selectedUserType === 'mondoruote') {
+                topBannerImage.src = "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png"; // Mondoruote TOP BANNER
+                bottomBannerImage.src = "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png"; // Mondoruote BOTTOM BANNER
+            } else if (selectedUserType === 'teamvegliante') {
+                topBannerImage.src = "https://i.postimg.cc/QtjYBCVn/top-banner.png"; // TEAMVEGLIANTE TOP BANNER
+                bottomBannerImage.src = "https://i.postimg.cc/xTBsvtcm/bottom-banner.png"; // TEAM VEGLIANTE BOTTOM BANNER
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>TEAM VEGLIANTE SERVIZI</h1>
+
+    <!-- Display the selected user image URL if available -->
+    {% if user_image_url %}
+        <div>
+            <img src="{{ user_image_url }}" alt="User Type Image" style="width: 50%; max-width: 300px;">
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        <label for="user_type">Select User Type:</label><br>
+        <input type="radio" name="user_type" value="mondoruote" id="mondoruote" onchange="updateUserImage()"> Mondoruote<br>
+        <input type="radio" name="user_type" value="teamvegliante" id="teamvegliante" onchange="updateUserImage()"> Teamvegliante<br><br>
+
+        <label for="brand">Brand(s):</label><br>
+        {% for brand in brands %}
+            <input type="checkbox" name="brand" value="{{ brand }}" id="{{ brand }}" onchange="updateModels()"> {{ brand }}<br>
+        {% endfor %}<br>
+
+        <label for="model">Model:</label>
+        <select name="model" id="model" onchange="updateYears()">
+            <option value="">Select Model</option>
+        </select><br><br>
+
+        <label for="production_year">Production Year:</label>
+        <select name="production_year" id="production_year">
+            <option value="">Select Year</option>
+        </select><br><br>
+
+        <label for="pcd">PCD:</label>
+        <input type="text" name="pcd" id="pcd"><br><br>
+
+        <label for="cb">CB:</label>
+        <input type="text" name="cb" id="cb"><br><br>
+
+        <label for="et">ET:</label>
+        <input type="text" name="et" id="et"><br><br>
+        
+        <label for="contact">Contact:</label>
+        <input type="text" name="contact" id="contact"><br><br>
+        
+        <label for="MAIL">Email:</label>
+        <input type="text" name="MAIL" id="MAIL"><br><br>
+
+        <label for="FEEDBACK">Feedback:</label>
+        <input type="text" name="FEEDBACK" id="FEEDBACK"><br><br>
+
+        <label for="Spedizione">Spedizione:</label>
+        <input type="text" name="Spedizione" id="Spedizione"><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if selected_cars %}
+    <h2>Raw HTML Code Output</h2>
+    <pre>
+      <!-- Display the Top Banner URL at the top -->
+      {% if top_banner_url %}
+      &lt;img src="{{ top_banner_url }}" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" /&gt;
+  {% endif %}
+        {% for car in selected_cars %}
+            &lt;h3&gt;MARCA: {{ car['brand'] }} &lt;/h3&gt;
+            &lt;h3&gt;MODELLO: {{ car['model'] }} &lt;/h3&gt;
+            &lt;h3&gt;ANNO: {{ car['production_years'] }} &lt;/h3&gt;
+            &lt;p style="font-size: 25px;"&gt;PCD: {{ pcd }}&lt;/p&gt;
+            &lt;p style="font-size: 25px;"&gt;CB: {{ cb }}&lt;/p&gt;
+            &lt;p style="font-size: 25px;"&gt;ET: {{ et }}&lt;/p&gt;
+            &lt;p style="font-size: 25px;"&gt;Contact: {{ contact }}&lt;/p&gt;
+            &lt;p style="font-size: 25px;"&gt;Email: {{ MAIL }}&lt;/p&gt;
+            &lt;p style="font-size: 25px;"&gt;Feedback: {{ FEEDBACK }}&lt;/p&gt;
+            &lt;p style="font-size: 25px;"&gt;Spedizione: {{ Spedizione }}&lt;/p&gt;
+            &lt;div&gt;
+                {% for image_url in image_urls %}
+                    &lt;img src="{{ image_url }}" alt="Car Image" style="width: 200px; margin: 10px;" /&gt;
+                {% endfor %}
+            &lt;/div&gt;
+        {% endfor %}
+         <!-- Display the Bottom Banner URL at the bottom -->
+         {% if bottom_banner_url %}
+        &lt;img src="{{ bottom_banner_url }}" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" /&gt;
+     {% endif %}
+    </pre>
+{% endif %}
+</body>
+</html>
