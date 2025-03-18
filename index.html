@@ -1,159 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Details</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Details</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        let carsData = [];  // To store car data parsed from CSV
+        let brands = [];    // List of car brands from CSV
+
+        // Function to read the CSV data (simulate what you had in Python)
+        function loadCSV() {
+            Papa.parse('cars.csv', {
+                download: true,
+                complete: function(results) {
+                    carsData = results.data;
+                    brands = [...new Set(carsData.map(car => car.brand))].sort();
+                    populateBrands();
+                }
+            });
+        }
+
+        // Populate the brand checkboxes
+        function populateBrands() {
+            const brandContainer = document.getElementById('brand-container');
+            brandContainer.innerHTML = '';
+            brands.forEach(brand => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'brand';
+                checkbox.value = brand;
+                checkbox.addEventListener('change', updateModels);
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(brand));
+                brandContainer.appendChild(label);
+                brandContainer.appendChild(document.createElement('br'));
+            });
+        }
+
+        // Update models based on selected brands
+        function updateModels() {
+            const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+            const models = [...new Set(carsData.filter(car => selectedBrands.includes(car.brand)).map(car => car.model))].sort();
+            const modelSelect = document.getElementById('model');
+            modelSelect.innerHTML = '<option value="">Select Model</option>';
+            models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
+            });
+        }
+
+        // Update production years based on selected brand and model
+        function updateYears() {
+            const selectedBrand = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value)[0];
+            const selectedModel = document.getElementById('model').value;
+            const years = [...new Set(carsData.filter(car => car.brand === selectedBrand && car.model === selectedModel).map(car => car.production_years))].sort();
+            const yearSelect = document.getElementById('production_year');
+            yearSelect.innerHTML = '<option value="">Select Year</option>';
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+        }
+
+        // Generate the raw HTML code output
+        function generateHTMLCode() {
+            const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+            const selectedModel = document.getElementById('model').value;
+            const selectedYear = document.getElementById('production_year').value;
+            const pcd = document.getElementById('pcd').value;
+            const cb = document.getElementById('cb').value;
+            const et = document.getElementById('et').value;
+            const contact = document.getElementById('contact').value;
+            const MAIL = document.getElementById('MAIL').value;
+            const FEEDBACK = document.getElementById('FEEDBACK').value;
+            const Spedizione = document.getElementById('Spedizione').value;
+
+            // Filter selected cars
+            const selectedCars = carsData.filter(car => selectedBrands.includes(car.brand) && car.model === selectedModel && car.production_years === selectedYear);
+
+            let rawHTML = '';
+
+            selectedCars.forEach(car => {
+                rawHTML += `<h3>MARCA: ${car.brand}</h3>`;
+                rawHTML += `<h3>MODELLO: ${car.model}</h3>`;
+                rawHTML += `<h3>ANNO: ${car.production_years}</h3>`;
+                rawHTML += `<p style="font-size: 25px;">PCD: ${pcd}</p>`;
+                rawHTML += `<p style="font-size: 25px;">CB: ${cb}</p>`;
+                rawHTML += `<p style="font-size: 25px;">ET: ${et}</p>`;
+                rawHTML += `<p style="font-size: 25px;">Contact: ${contact}</p>`;
+                rawHTML += `<p style="font-size: 25px;">Email: ${MAIL}</p>`;
+                rawHTML += `<p style="font-size: 25px;">Feedback: ${FEEDBACK}</p>`;
+                rawHTML += `<p style="font-size: 25px;">Spedizione: ${Spedizione}</p>`;
+                rawHTML += '<div>';
+                car.image_urls.split(',').forEach(imageUrl => {
+                    rawHTML += `<img src="${imageUrl}" alt="Car Image" style="width: 200px; margin: 10px;">`;
+                });
+                rawHTML += '</div>';
+            });
+
+            // Display the raw HTML code
+            const rawHtmlContainer = document.getElementById('raw-html-output');
+            rawHtmlContainer.textContent = rawHTML; // Display the raw HTML as text
+        }
+
+        // On page load, load the CSV data
+        window.onload = loadCSV;
+    </script>
 </head>
-
 <body>
-  <h1>TEAM VEGLIANTE SERVIZI</h1>
+    <h1>TEAM VEGLIANTE SERVIZI</h1>
 
-  <form id="carForm">
-    <label>Select User Type:</label><br>
-    <input type="radio" name="user_type" value="mondoruote" onchange="updateUserImage()"> Mondoruote<br>
-    <input type="radio" name="user_type" value="teamvegliante" onchange="updateUserImage()"> Teamvegliante<br><br>
+    <!-- User Type Selection -->
+    <label for="user_type">Select User Type:</label><br>
+    <input type="radio" name="user_type" value="mondoruote" id="mondoruote" onchange="updateUserImage()"> Mondoruote<br>
+    <input type="radio" name="user_type" value="teamvegliante" id="teamvegliante" onchange="updateUserImage()"> Teamvegliante<br><br>
 
-    <label>Brand(s):</label><br>
-    <div id="brands-container"></div><br>
+    <!-- Brand Selection -->
+    <label for="brand">Brand(s):</label><br>
+    <div id="brand-container"></div><br>
 
-    <label>Model:</label>
+    <!-- Model and Year Selection -->
+    <label for="model">Model:</label>
     <select name="model" id="model" onchange="updateYears()">
-      <option value="">Select Model</option>
+        <option value="">Select Model</option>
     </select><br><br>
 
-    <label>Production Year:</label>
+    <label for="production_year">Production Year:</label>
     <select name="production_year" id="production_year">
-      <option value="">Select Year</option>
+        <option value="">Select Year</option>
     </select><br><br>
 
-    <label>PCD:</label>
-    <input type="text" id="pcd"><br><br>
+    <!-- Other Inputs -->
+    <label for="pcd">PCD:</label>
+    <input type="text" name="pcd" id="pcd"><br><br>
 
-    <label>CB:</label>
-    <input type="text" id="cb"><br><br>
+    <label for="cb">CB:</label>
+    <input type="text" name="cb" id="cb"><br><br>
 
-    <label>ET:</label>
-    <input type="text" id="et"><br><br>
+    <label for="et">ET:</label>
+    <input type="text" name="et" id="et"><br><br>
 
-    <label>Contact:</label>
-    <input type="text" id="contact"><br><br>
+    <label for="contact">Contact:</label>
+    <input type="text" name="contact" id="contact"><br><br>
 
-    <label>Email:</label>
-    <input type="text" id="MAIL"><br><br>
+    <label for="MAIL">Email:</label>
+    <input type="text" name="MAIL" id="MAIL"><br><br>
 
-    <label>Feedback:</label>
-    <input type="text" id="FEEDBACK"><br><br>
+    <label for="FEEDBACK">Feedback:</label>
+    <input type="text" name="FEEDBACK" id="FEEDBACK"><br><br>
 
-    <label>Spedizione:</label>
-    <input type="text" id="Spedizione"><br><br>
+    <label for="Spedizione">Spedizione:</label>
+    <input type="text" name="Spedizione" id="Spedizione"><br><br>
 
-    <button type="button" onclick="generateHTML()">Submit</button>
-  </form>
+    <button type="button" onclick="generateHTMLCode()">Generate Raw HTML Code</button><br><br>
 
-  <br>
-  <img id="top-banner" style="width: 100%; max-width: 1350px;" />
-  <div id="output"></div>
-  <img id="bottom-banner" style="width: 100%; max-width: 1350px;" />
-
-  <script>
-    let carData = [];
-
-    // Load and parse the CSV file
-    Papa.parse('cars.csv', {
-      download: true,
-      header: true,
-      complete: function (results) {
-        carData = results.data;
-        populateBrands();
-      }
-    });
-
-    // Function to populate the brands dynamically from the CSV data
-    function populateBrands() {
-      const brands = [...new Set(carData.map(car => car.brand))];
-      const container = document.getElementById('brands-container');
-      brands.forEach(brand => {
-        container.innerHTML += `<input type="checkbox" name="brand" value="${brand}" onchange="updateModels()"> ${brand}<br>`;
-      });
-    }
-
-    // Function to update available models when brands are selected
-    function updateModels() {
-      const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
-      const models = [...new Set(carData.filter(car => selectedBrands.includes(car.brand)).map(car => car.model))];
-      const modelSelect = document.getElementById('model');
-      modelSelect.innerHTML = '<option value="">Select Model</option>';
-      models.forEach(model => modelSelect.innerHTML += `<option value="${model}">${model}</option>`);
-    }
-
-    // Function to update available production years when a model is selected
-    function updateYears() {
-      const selectedBrand = document.querySelector('input[name="brand"]:checked')?.value;
-      const selectedModel = document.getElementById('model').value;
-      const years = [...new Set(carData.filter(car => car.brand === selectedBrand && car.model === selectedModel).map(car => car.production_years))];
-      const yearSelect = document.getElementById('production_year');
-      yearSelect.innerHTML = '<option value="">Select Year</option>';
-      years.forEach(year => yearSelect.innerHTML += `<option value="${year}">${year}</option>`);
-    }
-
-    // Function to change the banners based on the selected user type
-    function updateUserImage() {
-      const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
-      const topBanner = document.getElementById('top-banner');
-      const bottomBanner = document.getElementById('bottom-banner');
-
-      if (selectedUserType === 'mondoruote') {
-        topBanner.src = "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png";
-        bottomBanner.src = "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png";
-      } else if (selectedUserType === 'teamvegliante') {
-        topBanner.src = "https://i.postimg.cc/QtjYBCVn/top-banner.png";
-        bottomBanner.src = "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
-      }
-    }
-
-    // Function to generate HTML output based on the user's selection
-    function generateHTML() {
-      const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
-      const selectedModel = document.getElementById('model').value;
-      const selectedYear = document.getElementById('production_year').value;
-      const pcd = document.getElementById('pcd').value;
-      const cb = document.getElementById('cb').value;
-      const et = document.getElementById('et').value;
-      const contact = document.getElementById('contact').value;
-      const MAIL = document.getElementById('MAIL').value;
-      const FEEDBACK = document.getElementById('FEEDBACK').value;
-      const Spedizione = document.getElementById('Spedizione').value;
-
-      const selectedCars = carData.filter(car =>
-        selectedBrands.includes(car.brand) &&
-        car.model === selectedModel &&
-        car.production_years === selectedYear
-      );
-
-      let html = '';
-      selectedCars.forEach(car => {
-        html += `<h3>MARCA: ${car.brand}</h3>`;
-        html += `<h3>MODELLO: ${car.model}</h3>`;
-        html += `<h3>ANNO: ${car.production_years}</h3>`;
-        html += `<p style="font-size: 25px;">PCD: ${pcd}</p>`;
-        html += `<p style="font-size: 25px;">CB: ${cb}</p>`;
-        html += `<p style="font-size: 25px;">ET: ${et}</p>`;
-        html += `<p style="font-size: 25px;">Contact: ${contact}</p>`;
-        html += `<p style="font-size: 25px;">Email: ${MAIL}</p>`;
-        html += `<p style="font-size: 25px;">Feedback: ${FEEDBACK}</p>`;
-        html += `<p style="font-size: 25px;">Spedizione: ${Spedizione}</p>`;
-        car.image_urls.split(',').forEach(img => {
-          html += `<img src="${img.trim()}" alt="Car Image" style="width:200px; margin:10px;">`;
-        });
-      });
-
-      document.getElementById('output').innerHTML = html;
-    }
-  </script>
+    <!-- Display the Raw HTML Code -->
+    <h2>Raw HTML Code Output</h2>
+    <pre id="raw-html-output"></pre>
 </body>
-
 </html>
