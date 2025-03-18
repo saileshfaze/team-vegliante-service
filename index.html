@@ -115,6 +115,15 @@
       }
     }
 
+    // Function to escape HTML so it is shown as raw HTML code in the <pre> block
+    function escapeHTML(str) {
+      return str.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+    }
+
     // Function to generate HTML output based on the user's selection
     function generateHTML() {
       const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
@@ -151,7 +160,11 @@
         });
       });
 
-      document.getElementById('output').innerHTML = html;
+      // Escape the generated HTML to show it as raw HTML code in the output div
+      const rawHtml = escapeHTML(html);
+
+      // Display the raw HTML in a <pre> block for better readability
+      document.getElementById('output').innerHTML = `<pre>${rawHtml}</pre>`;
     }
   </script>
 </body>
