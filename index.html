@@ -18,7 +18,10 @@
     <input type="radio" name="user_type" value="teamvegliante" onchange="updateUserImage()"> Teamvegliante<br><br>
 
     <label>Brand(s):</label><br>
-    <div id="brands-container"></div><br>
+    <!-- Changed to dropdown instead of checkboxes -->
+    <select id="brands-select" onchange="updateModels()">
+      <option value="">Select Brand</option>
+    </select><br><br>
 
     <label>Model:</label>
     <select name="model" id="model" onchange="updateYears()">
@@ -83,23 +86,18 @@
     // Function to populate the brands dynamically from the CSV data
     function populateBrands() {
       const brands = [...new Set(carData.map(car => car.brand))];
-      const container = document.getElementById('brands-container');
+      const brandsSelect = document.getElementById('brands-select');
       
-      // Create a select element for brands
-      let selectHTML = '<select id="brands-select" onchange="updateModels()">';
-      selectHTML += '<option value="">Select Brand</option>';
+      // Create options for the brands dropdown
+      brandsSelect.innerHTML = '<option value="">Select Brand</option>';
       brands.forEach(brand => {
-        selectHTML += `<option value="${brand}">${brand}</option>`;
+        brandsSelect.innerHTML += `<option value="${brand}">${brand}</option>`;
       });
-      selectHTML += '</select>';
-      
-      // Inject the select dropdown into the container
-      container.innerHTML = selectHTML;
     }
 
     // Function to update available models when a brand is selected
     function updateModels() {
-      const selectedBrand = document.getElementById('brands-select').value; // Get selected brand from dropdown
+      const selectedBrand = document.getElementById('brands-select').value;
       const models = [...new Set(carData.filter(car => car.brand === selectedBrand).map(car => car.model))];
       const modelSelect = document.getElementById('model');
       modelSelect.innerHTML = '<option value="">Select Model</option>';
