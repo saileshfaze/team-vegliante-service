@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Details</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+
+<body>
+  <h1>TEAM VEGLIANTE SERVIZI</h1>
+
+  <form id="carForm">
+    <label>Select User Type:</label><br>
+    <input type="radio" name="user_type" value="mondoruote" onchange="updateUserImage()"> Mondoruote<br>
+    <input type="radio" name="user_type" value="teamvegliante" onchange="updateUserImage()"> Teamvegliante<br><br>
+
+    <label>Brand(s):</label><br>
+    <div id="brands-container"></div><br>
+
+    <label>Model:</label>
+    <select name="model" id="model" onchange="updateYears()">
+      <option value="">Select Model</option>
+    </select><br><br>
+
+    <label>Production Year:</label>
+    <select name="production_year" id="production_year">
+      <option value="">Select Year</option>
+    </select><br><br>
+
+    <label>PCD:</label>
+    <input type="text" id="pcd"><br><br>
+
+    <label>CB:</label>
+    <input type="text" id="cb"><br><br>
+
+    <label>ET:</label>
+    <input type="text" id="et"><br><br>
+
+    <label>Contact:</label>
+    <input type="text" id="contact"><br><br>
+
+    <label>Email:</label>
+    <input type="text" id="MAIL"><br><br>
+
+    <label>Feedback:</label>
+    <input type="text" id="FEEDBACK"><br><br>
+
+    <label>Spedizione:</label>
+    <input type="text" id="Spedizione"><br><br>
+
+    <button type="button" onclick="generateHTML()">Submit</button>
+  </form>
+
+  <br>
+  <img id="top-banner" style="width: 100%; max-width: 1350px;" />
+  <div id="output"></div>
+  <img id="bottom-banner" style="width: 100%; max-width: 1350px;" />
+
+  <script>
+    let carData = [];
+
+    // Load and parse the CSV file
+    Papa.parse('cars.csv', {
+      download: true,
+      header: true,
+      complete: function (results) {
+        carData = results.data;
+        populateBrands();
+      }
+    });
+
+    // Function to populate the brands dynamically from the CSV data
+    function populateBrands() {
+      const brands = [...new Set(carData.map(car => car.brand))];
+      const container = document.getElementById('brands-container');
+      brands.forEach(brand => {
+        container.innerHTML += `<input type="checkbox" name="brand" value="${brand}" onchange="updateModels()"> ${brand}<br>`;
+      });
+    }
+
+    // Function to update available models when brands are selected
+    function updateModels() {
+      const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+      const models = [...new Set(carData.filter(car => selectedBrands.includes(car.brand)).map(car => car.model))];
+      const modelSelect = document.getElementById('model');
+      modelSelect.innerHTML = '<option value="">Select Model</option>';
+      models.forEach(model => modelSelect.innerHTML += `<option value="${model}">${model}</option>`);
+    }
+
+    // Function to update available production years when a model is selected
+    function updateYears() {
+      const selectedBrand = document.querySelector('input[name="brand"]:checked')?.value;
+      const selectedModel = document.getElementById('model').value;
+      const years = [...new Set(carData.filter(car => car.brand === selectedBrand && car.model === selectedModel).map(car => car.production_years))];
+      const yearSelect = document.getElementById('production_year');
+      yearSelect.innerHTML = '<option value="">Select Year</option>';
+      years.forEach(year => yearSelect.innerHTML += `<option value="${year}">${year}</option>`);
+    }
+
+    // Function to change the banners based on the selected user type
+    function updateUserImage() {
+      const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
+      const topBanner = document.getElementById('top-banner');
+      const bottomBanner = document.getElementById('bottom-banner');
+
+      if (selectedUserType === 'mondoruote') {
+        topBanner.src = "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png";
+        bottomBanner.src = "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png";
+      } else if (selectedUserType === 'teamvegliante') {
+        topBanner.src = "https://i.postimg.cc/QtjYBCVn/top-banner.png";
+        bottomBanner.src = "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
+      }
+    }
+
+    // Function to generate HTML output based on the user's selection
+    function generateHTML() {
+      const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+      const selectedModel = document.getElementById('model').value;
+      const selectedYear = document.getElementById('production_year').value;
+      const pcd = document.getElementById('pcd').value;
+      const cb = document.getElementById('cb').value;
+      const et = document.getElementById('et').value;
+      const contact = document.getElementById('contact').value;
+      const MAIL = document.getElementById('MAIL').value;
+      const FEEDBACK = document.getElementById('FEEDBACK').value;
+      const Spedizione = document.getElementById('Spedizione').value;
+
+      const selectedCars = carData.filter(car =>
+        selectedBrands.includes(car.brand) &&
+        car.model === selectedModel &&
+        car.production_years === selectedYear
+      );
+
+      let html = '';
+      selectedCars.forEach(car => {
+        html += `<h3>MARCA: ${car.brand}</h3>`;
+        html += `<h3>MODELLO: ${car.model}</h3>`;
+        html += `<h3>ANNO: ${car.production_years}</h3>`;
+        html += `<p style="font-size: 25px;">PCD: ${pcd}</p>`;
+        html += `<p style="font-size: 25px;">CB: ${cb}</p>`;
+        html += `<p style="font-size: 25px;">ET: ${et}</p>`;
+        html += `<p style="font-size: 25px;">Contact: ${contact}</p>`;
+        html += `<p style="font-size: 25px;">Email: ${MAIL}</p>`;
+        html += `<p style="font-size: 25px;">Feedback: ${FEEDBACK}</p>`;
+        html += `<p style="font-size: 25px;">Spedizione: ${Spedizione}</p>`;
+        car.image_urls.split(',').forEach(img => {
+          html += `<img src="${img.trim()}" alt="Car Image" style="width:200px; margin:10px;">`;
+        });
+      });
+
+      document.getElementById('output').innerHTML = html;
+    }
+  </script>
+</body>
+
+</html>
