@@ -84,15 +84,23 @@
     function populateBrands() {
       const brands = [...new Set(carData.map(car => car.brand))];
       const container = document.getElementById('brands-container');
+      
+      // Create a select element for brands
+      let selectHTML = '<select id="brands-select" onchange="updateModels()">';
+      selectHTML += '<option value="">Select Brand</option>';
       brands.forEach(brand => {
-        container.innerHTML += `<input type="checkbox" name="brand" value="${brand}" onchange="updateModels()"> ${brand}<br>`;
+        selectHTML += `<option value="${brand}">${brand}</option>`;
       });
+      selectHTML += '</select>';
+      
+      // Inject the select dropdown into the container
+      container.innerHTML = selectHTML;
     }
 
-    // Function to update available models when brands are selected
+    // Function to update available models when a brand is selected
     function updateModels() {
-      const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
-      const models = [...new Set(carData.filter(car => selectedBrands.includes(car.brand)).map(car => car.model))];
+      const selectedBrand = document.getElementById('brands-select').value; // Get selected brand from dropdown
+      const models = [...new Set(carData.filter(car => car.brand === selectedBrand).map(car => car.model))];
       const modelSelect = document.getElementById('model');
       modelSelect.innerHTML = '<option value="">Select Model</option>';
       models.forEach(model => modelSelect.innerHTML += `<option value="${model}">${model}</option>`);
@@ -100,7 +108,7 @@
 
     // Function to update available production years when a model is selected
     function updateYears() {
-      const selectedBrand = document.querySelector('input[name="brand"]:checked')?.value;
+      const selectedBrand = document.getElementById('brands-select').value;
       const selectedModel = document.getElementById('model').value;
       const years = [...new Set(carData.filter(car => car.brand === selectedBrand && car.model === selectedModel).map(car => car.production_years))];
       const yearSelect = document.getElementById('production_year');
@@ -125,7 +133,7 @@
 
     // Function to generate raw HTML output and display as text
     function generateHTML() {
-      const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+      const selectedBrand = document.getElementById('brands-select').value;
       const selectedModel = document.getElementById('model').value;
       const selectedYear = document.getElementById('production_year').value;
       const pcd = document.getElementById('pcd').value;
@@ -137,7 +145,7 @@
       const Spedizione = document.getElementById('Spedizione').value;
 
       const selectedCars = carData.filter(car =>
-        selectedBrands.includes(car.brand) &&
+        car.brand === selectedBrand &&
         car.model === selectedModel &&
         car.production_years === selectedYear
       );
@@ -145,17 +153,7 @@
       let html = '';
 
       selectedCars.forEach(car => {
-        // Get banner images based on selected user type
-        const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
-        const topBannerSrc = selectedUserType === 'mondoruote' ?
-          "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" :
-          "https://i.postimg.cc/QtjYBCVn/top-banner.png";
-          
-        const bottomBannerSrc = selectedUserType === 'mondoruote' ?
-          "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" :
-          "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
-
-        html += `<img src="${topBannerSrc}" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
+        html += `<img src="https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
 
         html += `<h3>MARCA: ${car.brand}</h3>\n`;
         html += `<h3>MODELLO: ${car.model}</h3>\n`;
@@ -175,7 +173,7 @@
           });
         }
 
-        html += `<img src="${bottomBannerSrc}" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
+        html += `<img src="https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
       });
 
       // Inject the HTML into the div so it will render
