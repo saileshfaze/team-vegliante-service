@@ -148,15 +148,27 @@
       let html = '';
 
       selectedCars.forEach(car => {
-        // Get banner images based on selected user type
-        const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
-        const topBannerSrc = selectedUserType === 'mondoruote' ?
-          "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" :
-          "https://i.postimg.cc/QtjYBCVn/top-banner.png";
-          
-        const bottomBannerSrc = selectedUserType === 'mondoruote' ?
-          "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" :
-          "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
+      function updateUserImage() {
+  const selectedUserType = document.querySelector('input[name="user_type"]:checked')?.value;
+  
+  if (!selectedUserType) {
+    console.error('Please select a user type.');
+    return;
+  }
+
+  const topBanner = document.getElementById('top-banner');
+  const bottomBanner = document.getElementById('bottom-banner');
+
+  // Set banners based on selected user type
+  if (selectedUserType === 'mondoruote') {
+    topBanner.src = "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png";
+    bottomBanner.src = "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png";
+  } else if (selectedUserType === 'teamvegliante') {
+    topBanner.src = "https://i.postimg.cc/QtjYBCVn/top-banner.png";
+    bottomBanner.src = "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
+  }
+}
+
 
         html += `<img src="${topBannerSrc}" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
 
