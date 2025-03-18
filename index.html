@@ -152,12 +152,10 @@
         const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
         const topBannerSrc = selectedUserType === 'mondoruote' ?
           "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" :
-        const topBannerSrc = selectedUserType === 'teamvegliante' ?
           "https://i.postimg.cc/QtjYBCVn/top-banner.png";
           
         const bottomBannerSrc = selectedUserType === 'mondoruote' ?
           "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" :
-        const bottomBannerSrc = selectedUserType === 'teamvegliante' ?
           "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
 
         html += `<img src="${topBannerSrc}" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
@@ -191,8 +189,6 @@
     }
 
     // Function to copy the raw HTML code to the clipboard
-    function
-    // Function to copy the raw HTML code to the clipboard
     function copyToClipboard() {
       const copyText = document.getElementById('output');
       copyText.select();
@@ -202,4 +198,4 @@
 
 </body>
 
-</html> 
+</html>
