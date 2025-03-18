@@ -125,7 +125,6 @@
 
     // Function to generate raw HTML output and display as text
     function generateHTML() {
-      const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
       const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
       const selectedModel = document.getElementById('model').value;
       const selectedYear = document.getElementById('production_year').value;
@@ -145,16 +144,17 @@
 
       let html = '';
 
-      const topBannerSrc = selectedUserType === 'mondoruote' ?
-        "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" :
-        "https://i.postimg.cc/QtjYBCVn/top-banner.png";
-
-      const bottomBannerSrc = selectedUserType === 'mondoruote' ?
-        "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" :
-        "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
-
       selectedCars.forEach(car => {
-        // Insert the correct top banner image
+        // Get banner images based on selected user type
+        const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
+        const topBannerSrc = selectedUserType === 'mondoruote' ?
+          "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" :
+          "https://i.postimg.cc/QtjYBCVn/top-banner.png";
+          
+        const bottomBannerSrc = selectedUserType === 'mondoruote' ?
+          "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" :
+          "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
+
         html += `<img src="${topBannerSrc}" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
 
         html += `<h3>MARCA: ${car.brand}</h3>\n`;
@@ -175,7 +175,6 @@
           });
         }
 
-        // Insert the correct bottom banner image
         html += `<img src="${bottomBannerSrc}" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
       });
 
