@@ -145,7 +145,7 @@
       let html = '';
 
       selectedCars.forEach(car => {
-        html += `<img src="https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
+        html += `<img src="${topBannerSrc}" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
 
         html += `<h3>MARCA: ${car.brand}</h3>\n`;
         html += `<h3>MODELLO: ${car.model}</h3>\n`;
@@ -165,11 +165,8 @@
           });
         }
 
-        html += `<img src="https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
-      });
-
-      // Inject the HTML into the div so it will render
-      document.getElementById('html-output-container').innerHTML = html;
+        html += `<img src="${bottomBannerSrc}" alt="Bottom Banner" style="width: 100%; max-width: 1350px; margin: 0px 0;" />\n`;
+  });
 
       // Display the raw HTML text in the output container for copying
       document.getElementById('output').value = html;
