@@ -144,44 +144,23 @@
       );
 
       let html = '';
-      html += `{% if selected_cars %}\n`;
-      html += `  <h2>Raw HTML Code Output</h2>\n`;
-      html += `  <pre>\n`;
-
-      // Display the Top Banner URL at the top
-      html += `    {% if top_banner_url %}\n`;
-      html += `    &lt;img src="{{ top_banner_url }}" alt="Top Banner" style="width: 100%; max-width: 1350px; margin: 0px 0;" /&gt;\n`;
-      html += `    {% endif %}\n`;
-
-      // Loop through selected cars and display details
       selectedCars.forEach(car => {
-        html += `    &lt;h3&gt;MARCA: ${car.brand} &lt;/h3&gt;\n`;
-        html += `    &lt;h3&gt;MODELLO: ${car.model} &lt;/h3&gt;\n`;
-        html += `    &lt;h3&gt;ANNO: ${car.production_years} &lt;/h3&gt;\n`;
-        html += `    &lt;p style="font-size: 25px;"&gt;PCD: ${pcd}&lt;/p&gt;\n`;
-        html += `    &lt;p style="font-size: 25px;"&gt;CB: ${cb}&lt;/p&gt;\n`;
-        html += `    &lt;p style="font-size: 25px;"&gt;ET: ${et}&lt;/p&gt;\n`;
-        html += `    &lt;p style="font-size: 25px;"&gt;Contact: ${contact}&lt;/p&gt;\n`;
-        html += `    &lt;p style="font-size: 25px;"&gt;Email: ${MAIL}&lt;/p&gt;\n`;
-        html += `    &lt;p style="font-size: 25px;"&gt;Feedback: ${FEEDBACK}&lt;/p&gt;\n`;
-        html += `    &lt;p style="font-size: 25px;"&gt;Spedizione: ${Spedizione}&lt;/p&gt;\n`;
-
-        // Loop through car images
+        html += `<h3>MARCA: ${car.brand}</h3>`;
+        html += `<h3>MODELLO: ${car.model}</h3>`;
+        html += `<h3>ANNO: ${car.production_years}</h3>`;
+        html += `<p style="font-size: 25px;">PCD: ${pcd}</p>`;
+        html += `<p style="font-size: 25px;">CB: ${cb}</p>`;
+        html += `<p style="font-size: 25px;">ET: ${et}</p>`;
+        html += `<p style="font-size: 25px;">Contact: ${contact}</p>`;
+        html += `<p style="font-size: 25px;">Email: ${MAIL}</p>`;
+        html += `<p style="font-size: 25px;">Feedback: ${FEEDBACK}</p>`;
+        html += `<p style="font-size: 25px;">Spedizione: ${Spedizione}</p>`;
         car.image_urls.split(',').forEach(img => {
-          html += `    &lt;img src="${img.trim()}" alt="Car Image" style="width: 200px; margin: 10px;" /&gt;\n`;
+          html += `<img src="${img.trim()}" alt="Car Image" style="width:200px; margin:10px;">`;
         });
       });
 
-      // Display the Bottom Banner URL at the bottom
-      html += `    <!-- Display the Bottom Banner URL at the bottom -->\n`;
-      html += `    {% if bottom_banner_url %}\n`;
-      html += `    &lt;img src="{{ bottom_banner_url }}" alt="Bottom Banner" style="width: 100%; max-width: 1350px; margin: 0px 0;" /&gt;\n`;
-      html += `    {% endif %}\n`;
-
-      html += `  </pre>\n`;
-      html += `{% endif %}\n`;
-
-      // Escape the generated HTML to display it as raw HTML code
+      // Escape HTML and show raw HTML code in the output div
       document.getElementById('output').innerText = escapeHTML(html);
     }
   </script>
