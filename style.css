@@ -1,0 +1,193 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9fafb;
+    color: #333;
+    padding: 20px;
+}
+
+/* Header Styling */
+h1 {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 40px;
+}
+
+/* Form Styling */
+form {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+form:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+form label {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #555;
+    font-weight: 500;
+}
+
+form select, form input[type="text"], form input[type="checkbox"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f7f7f7;
+    transition: border-color 0.3s ease;
+}
+
+form input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    margin-left: 0;
+}
+
+form input[type="text"], form select {
+    font-size: 1rem;
+    background-color: #f7f7f7;
+}
+
+form select:focus, form input[type="text"]:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+form button {
+    padding: 15px 30px;
+    background-color: #3498db;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #2980b9;
+}
+
+/* Display Section */
+h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-top: 50px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.selected-cars {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.selected-car {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 12px;
+    width: 280px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.selected-car:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.selected-car img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.selected-car h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #34495e;
+}
+
+.selected-car p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+}
+
+.selected-car .image-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.selected-car .image-gallery img {
+    max-width: 90px;
+    max-height: 90px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .selected-cars {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .selected-car {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    form {
+        width: 95%;
+    }
+}
+
+/* Image Styling for the User Image URL */
+.user-image {
+    display: block;
+    margin: 0 auto 20px;
+    width: 50%;
+    max-width: 300px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Additional Section Styling */
+section {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
