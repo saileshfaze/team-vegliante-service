@@ -189,4 +189,12 @@
     }
 
     // Function to copy the raw HTML code to the clipboard
-    function
+    function copyToClipboard() {
+      const copyText = document.getElementById('output');
+      copyText.select();
+      document.execCommand('copy');
+    }
+  </script>
+</body>
+
+</html>
