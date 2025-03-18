@@ -108,75 +108,93 @@
       years.forEach(year => yearSelect.innerHTML += `<option value="${year}">${year}</option>`);
     }
 
-// Function to generate raw HTML output and display as text
-function generateHTML() {
-  const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
-  
-  // Set the correct banners based on the selected user type
-  let topBannerSrc = '';
-  let bottomBannerSrc = '';
-  
-  if (selectedUserType === 'mondoruote') {
-    topBannerSrc = "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png";
-    bottomBannerSrc = "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png";
-  } else if (selectedUserType === 'teamvegliante') {
-    topBannerSrc = "https://i.postimg.cc/QtjYBCVn/top-banner.png";
-    bottomBannerSrc = "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
-  }
+    // Function to change the banners based on the selected user type
+    function updateUserImage() {
+      const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
+      const topBanner = document.getElementById('top-banner');
+      const bottomBanner = document.getElementById('bottom-banner');
 
-  const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
-  const selectedModel = document.getElementById('model').value;
-  const selectedYear = document.getElementById('production_year').value;
-  const pcd = document.getElementById('pcd').value;
-  const cb = document.getElementById('cb').value;
-  const et = document.getElementById('et').value;
-  const contact = document.getElementById('contact').value;
-  const MAIL = document.getElementById('MAIL').value;
-  const FEEDBACK = document.getElementById('FEEDBACK').value;
-  const Spedizione = document.getElementById('Spedizione').value;
-
-  const selectedCars = carData.filter(car =>
-    selectedBrands.includes(car.brand) &&
-    car.model === selectedModel &&
-    car.production_years === selectedYear
-  );
-
-  let html = '';
-
-  // Check if any cars are selected
-  if (selectedCars.length > 0) {
-    selectedCars.forEach(car => {
-      // Insert the correct top banner image
-      html += `<img src="${topBannerSrc}" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
-
-      html += `<h3>MARCA: ${car.brand}</h3>\n`;
-      html += `<h3>MODELLO: ${car.model}</h3>\n`;
-      html += `<h3>ANNO: ${car.production_years}</h3>\n`;
-      html += `<p style="font-size: 25px;">PCD: ${pcd}</p>\n`;
-      html += `<p style="font-size: 25px;">CB: ${cb}</p>\n`;
-      html += `<p style="font-size: 25px;">ET: ${et}</p>\n`;
-      html += `<p style="font-size: 25px;">Contact: ${contact}</p>\n`;
-      html += `<p style="font-size: 25px;">Email: ${MAIL}</p>\n`;
-      html += `<p style="font-size: 25px;">Feedback: ${FEEDBACK}</p>\n`;
-      html += `<p style="font-size: 25px;">Spedizione: ${Spedizione}</p>\n`;
-
-      if (car.image_urls) {
-        const images = car.image_urls.split(',');
-        images.forEach(image => {
-          html += `<img src="${image.trim()}" alt="Car Image" style="width: 200px; margin: 10px;" />\n`;
-        });
+      if (selectedUserType === 'mondoruote') {
+        topBanner.src = "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png";
+        bottomBanner.src = "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png";
+      } else if (selectedUserType === 'teamvegliante') {
+        topBanner.src = "https://i.postimg.cc/QtjYBCVn/top-banner.png";
+        bottomBanner.src = "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
       }
+    }
 
-      // Insert the correct bottom banner image
-      html += `<img src="${bottomBannerSrc}" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
-    });
-  } else {
-    html = `<p>No cars found for the selected options.</p>`;
-  }
+    // Function to generate raw HTML output and display as text
+    function generateHTML() {
+      const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
+      const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+      const selectedModel = document.getElementById('model').value;
+      const selectedYear = document.getElementById('production_year').value;
+      const pcd = document.getElementById('pcd').value;
+      const cb = document.getElementById('cb').value;
+      const et = document.getElementById('et').value;
+      const contact = document.getElementById('contact').value;
+      const MAIL = document.getElementById('MAIL').value;
+      const FEEDBACK = document.getElementById('FEEDBACK').value;
+      const Spedizione = document.getElementById('Spedizione').value;
 
-  // Inject the HTML into the div so it will render
-  document.getElementById('html-output-container').innerHTML = html;
+      const selectedCars = carData.filter(car =>
+        selectedBrands.includes(car.brand) &&
+        car.model === selectedModel &&
+        car.production_years === selectedYear
+      );
 
-  // Display the raw HTML text in the output container for copying
-  document.getElementById('output').value = html;
-}
+      let html = '';
+
+      const topBannerSrc = selectedUserType === 'mondoruote' ?
+        "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" :
+        "https://i.postimg.cc/QtjYBCVn/top-banner.png";
+
+      const bottomBannerSrc = selectedUserType === 'mondoruote' ?
+        "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" :
+        "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
+
+      selectedCars.forEach(car => {
+        // Insert the correct top banner image
+        html += `<img src="${topBannerSrc}" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
+
+        html += `<h3>MARCA: ${car.brand}</h3>\n`;
+        html += `<h3>MODELLO: ${car.model}</h3>\n`;
+        html += `<h3>ANNO: ${car.production_years}</h3>\n`;
+        html += `<p style="font-size: 25px;">PCD: ${pcd}</p>\n`;
+        html += `<p style="font-size: 25px;">CB: ${cb}</p>\n`;
+        html += `<p style="font-size: 25px;">ET: ${et}</p>\n`;
+        html += `<p style="font-size: 25px;">Contact: ${contact}</p>\n`;
+        html += `<p style="font-size: 25px;">Email: ${MAIL}</p>\n`;
+        html += `<p style="font-size: 25px;">Feedback: ${FEEDBACK}</p>\n`;
+        html += `<p style="font-size: 25px;">Spedizione: ${Spedizione}</p>\n`;
+
+        if (car.image_urls) {
+          const images = car.image_urls.split(',');
+          images.forEach(image => {
+            html += `<img src="${image.trim()}" alt="Car Image" style="width: 200px; margin: 10px;" />\n`;
+          });
+        }
+
+        // Insert the correct bottom banner image
+        html += `<img src="${bottomBannerSrc}" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
+      });
+
+      // Inject the HTML into the div so it will render
+      document.getElementById('html-output-container').innerHTML = html;
+
+      // Display the raw HTML text in the output container for copying
+      document.getElementById('output').value = html;
+    }
+
+    // Function to copy the raw HTML code to the clipboard
+    function copyToClipboard() {
+      const outputText = document.getElementById('output');
+      outputText.select();
+      outputText.setSelectionRange(0, 99999); // For mobile devices
+      document.execCommand('copy');
+      alert('HTML code copied to clipboard!');
+    }
+  </script>
+</body>
+
+</html>
