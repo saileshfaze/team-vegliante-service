@@ -18,8 +18,7 @@
     <input type="radio" name="user_type" value="teamvegliante" onchange="updateUserImage()"> Teamvegliante<br><br>
 
     <label>Brand(s):</label><br>
-    <!-- Changed to dropdown instead of checkboxes -->
-    <select id="brands-select" onchange="updateModels()">
+    <select name="brand" id="brands-container" onchange="updateModels()">
       <option value="">Select Brand</option>
     </select><br><br>
 
@@ -83,21 +82,19 @@
       }
     });
 
-    // Function to populate the brands dynamically from the CSV data
+    // Function to populate the brands dynamically from the CSV data (dropdown instead of checkboxes)
     function populateBrands() {
       const brands = [...new Set(carData.map(car => car.brand))];
-      const brandsSelect = document.getElementById('brands-select');
-      
-      // Create options for the brands dropdown
-      brandsSelect.innerHTML = '<option value="">Select Brand</option>';
+      const container = document.getElementById('brands-container');
+      container.innerHTML = '<option value="">Select Brand</option>';  // Clear current options
       brands.forEach(brand => {
-        brandsSelect.innerHTML += `<option value="${brand}">${brand}</option>`;
+        container.innerHTML += `<option value="${brand}">${brand}</option>`;
       });
     }
 
     // Function to update available models when a brand is selected
     function updateModels() {
-      const selectedBrand = document.getElementById('brands-select').value;
+      const selectedBrand = document.getElementById('brands-container').value;
       const models = [...new Set(carData.filter(car => car.brand === selectedBrand).map(car => car.model))];
       const modelSelect = document.getElementById('model');
       modelSelect.innerHTML = '<option value="">Select Model</option>';
@@ -106,7 +103,7 @@
 
     // Function to update available production years when a model is selected
     function updateYears() {
-      const selectedBrand = document.getElementById('brands-select').value;
+      const selectedBrand = document.getElementById('brands-container').value;
       const selectedModel = document.getElementById('model').value;
       const years = [...new Set(carData.filter(car => car.brand === selectedBrand && car.model === selectedModel).map(car => car.production_years))];
       const yearSelect = document.getElementById('production_year');
@@ -131,7 +128,7 @@
 
     // Function to generate raw HTML output and display as text
     function generateHTML() {
-      const selectedBrand = document.getElementById('brands-select').value;
+      const selectedBrand = document.getElementById('brands-container').value;
       const selectedModel = document.getElementById('model').value;
       const selectedYear = document.getElementById('production_year').value;
       const pcd = document.getElementById('pcd').value;
@@ -151,7 +148,17 @@
       let html = '';
 
       selectedCars.forEach(car => {
-        html += `<img src="https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
+        // Get banner images based on selected user type
+        const selectedUserType = document.querySelector('input[name="user_type"]:checked').value;
+        const topBannerSrc = selectedUserType === 'mondoruote' ?
+          "https://i.postimg.cc/tCg0SSqm/mondoruote-top.png" :
+          "https://i.postimg.cc/QtjYBCVn/top-banner.png";
+          
+        const bottomBannerSrc = selectedUserType === 'mondoruote' ?
+          "https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" :
+          "https://i.postimg.cc/xTBsvtcm/bottom-banner.png";
+
+        html += `<img src="${topBannerSrc}" alt="Top Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
 
         html += `<h3>MARCA: ${car.brand}</h3>\n`;
         html += `<h3>MODELLO: ${car.model}</h3>\n`;
@@ -171,7 +178,7 @@
           });
         }
 
-        html += `<img src="https://i.postimg.cc/RVYYPvbN/Untitled-design-4.png" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
+        html += `<img src="${bottomBannerSrc}" alt="Bottom Banner" style="width: 100%; max-width: 1000px; margin: 0px 0;" />\n`;
       });
 
       // Inject the HTML into the div so it will render
@@ -182,14 +189,4 @@
     }
 
     // Function to copy the raw HTML code to the clipboard
-    function copyToClipboard() {
-      const outputText = document.getElementById('output');
-      outputText.select();
-      outputText.setSelectionRange(0, 99999); // For mobile devices
-      document.execCommand('copy');
-      alert('HTML code copied to clipboard!');
-    }
-  </script>
-</body>
-
-</html>
+    function
